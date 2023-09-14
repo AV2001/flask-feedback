@@ -12,7 +12,10 @@
         <title>{% block title %}{% endblock %}</title>
     </head>
     <body>
-        <div class="container">
+        <div class="container mt-2">
+            {% for category, message in get_flashed_messages(with_categories=True) %}
+            <div class="alert alert-{{category}}">{{message}}</div>
+            {% endfor %}
             {% block content %}{% endblock %}
         </div>
     </body>
