@@ -1,6 +1,6 @@
-from flask import Flask, redirect, render_template
+from flask import Flask, flash, redirect, render_template
 from models import db, User
-from forms import RegisterForm
+from forms import RegisterForm, LoginForm
 
 # Create instance of Flask.
 app = Flask(__name__)
@@ -21,7 +21,7 @@ def home_page():
 
 
 @app.route('/register', methods=['GET', 'POST'])
-def show_register_form():
+def register_user():
     '''Register'''
     form = RegisterForm()
     if form.validate_on_submit():
@@ -37,6 +37,22 @@ def show_register_form():
     return render_template('register.html', form=form)
 
 
+@app.route('/login', methods=['GET', 'POST'])
+def login_user():
+    '''Login'''
+    form = LoginForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+        user = User.query.filter_by(username=username).first()
+        if user and user.password == password:
+            flash('Login Successful!', 'success')
+            return redirect('/secret')
+        else:
+            form.username.errors.append('Invalid username/password!')
+    return render_template('login.html', form=form)
+
+
 @app.route('/secret')
 def show_secret():
-    return '<h1 class="display-1">You made it!</h1>'
+    return '<h1>You made it!</h1>'
