@@ -35,3 +35,8 @@ def show_register_form():
         db.session.commit()
         return redirect('/secret')
     return render_template('register.html', form=form)
+
+
+@app.route('/secret')
+def show_secret():
+    return '<h1 class="display-1">You made it!</h1>'
