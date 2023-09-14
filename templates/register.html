@@ -2,6 +2,7 @@
 {% block title %}Register{% endblock %}
 {% block content %}
 <h1 class="display-1">Sign Up</h1>
+<p class="lead">Already have an account? <a href="/login">Login here!</a></p>
 <form method="POST">
     {{form.hidden_tag()}} {% for field in form if field.widget.input_type !=
         'hidden' %}
