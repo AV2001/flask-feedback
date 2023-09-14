@@ -10,3 +10,9 @@ class RegisterForm(FlaskForm):
     email = StringField('Email', validators=[InputRequired()])
     first_name = StringField('First Name', validators=[InputRequired()])
     last_name = StringField('Last Field', validators=[InputRequired()])
+
+
+class LoginForm(FlaskForm):
+    '''Login Form'''
+    username = StringField('Username', validators=[InputRequired()])
+    password = PasswordField('Password', validators=[InputRequired()])
