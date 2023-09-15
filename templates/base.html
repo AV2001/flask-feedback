@@ -4,19 +4,43 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
             rel="stylesheet"
-            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-            crossorigin="anonymous"
+            href="https://bootswatch.com/4/flatly/bootstrap.min.css"
         />
         <title>{% block title %}{% endblock %}</title>
     </head>
     <body>
+        <nav class="navbar navbar-light bg-primary justify-content-between">
+            <div class="container">
+                <a href="/" class="navbar-brand text-light">Flask Feedback</a>
+                <ul class="nav navbar-nav flex-row float-right">
+                    {% if session['username'] %}
+                    <li class="nav-item">
+                        <a href="/logout" class="nav-link pr-3 text-light"
+                            >Logout</a
+                        >
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a href="/login" class="nav-link pr-3 text-light"
+                            >Login</a
+                        >
+                    </li>
+                    <li class="nav-item">
+                        <a href="/register" class="nav-link text-light"
+                            >Sign up</a
+                        >
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+
         <div class="container mt-2">
-            {% for category, message in get_flashed_messages(with_categories=True) %}
+            {% for category, message in
+            get_flashed_messages(with_categories=True) %}
             <div class="alert alert-{{category}}">{{message}}</div>
-            {% endfor %}
-            {% block content %}{% endblock %}
+            {% endfor %} {% block content %}{% endblock %}
         </div>
     </body>
 </html>
