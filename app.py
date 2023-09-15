@@ -50,18 +50,21 @@ def login_user():
         if user:
             flash('Login Successful!', 'success')
             session['username'] = user.username
-            return redirect('/secret')
+            return redirect(f'/users/{user.username}')
         else:
             form.username.errors.append('Invalid username/password!')
     return render_template('login.html', form=form)
 
 
-@app.route('/secret')
-def show_secret():
-    if 'username' not in session:
-        flash('Please login first!', 'danger')
-        return redirect('/')
-    return '<h1>You made it!</h1>'
+@app.route('/users/<username>')
+def get_user(username):
+    '''Show profile information about a user.'''
+    if 'username' in session:
+        user = User.query.get(username)
+        return render_template('user-profile.html', user=user)
+    else:
+        flash('Cannot access resource unless logged in!', 'danger')
+        return redirect('/login')
 
 
 @app.route('/logout')
