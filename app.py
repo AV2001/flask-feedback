@@ -30,7 +30,8 @@ def register_user():
         email = form.email.data
         first_name = form.first_name.data
         last_name = form.last_name.data
-        new_user = User(username=username, password=password, email=email, first_name=first_name, last_name=last_name)
+        new_user = User.register(
+            username, password, email, first_name, last_name)
         db.session.add(new_user)
         db.session.commit()
         return redirect('/secret')
@@ -44,8 +45,8 @@ def login_user():
     if form.validate_on_submit():
         username = form.username.data
         password = form.password.data
-        user = User.query.filter_by(username=username).first()
-        if user and user.password == password:
+        user = User.authenticate(username, password)
+        if user:
             flash('Login Successful!', 'success')
             return redirect('/secret')
         else:
