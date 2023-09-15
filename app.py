@@ -1,4 +1,4 @@
-from flask import Flask, flash, redirect, render_template
+from flask import Flask, flash, redirect, render_template, session
 from models import db, User
 from forms import RegisterForm, LoginForm
 
@@ -34,7 +34,7 @@ def register_user():
             username, password, email, first_name, last_name)
         db.session.add(new_user)
         db.session.commit()
-        return redirect('/secret')
+        return redirect('/login')
     return render_template('register.html', form=form)
 
 
@@ -56,4 +56,6 @@ def login_user():
 
 @app.route('/secret')
 def show_secret():
+    if 'username' not in session:
+        return redirect('/')
     return '<h1>You made it!</h1>'
