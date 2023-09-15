@@ -62,3 +62,11 @@ def show_secret():
         flash('Please login first!', 'danger')
         return redirect('/')
     return '<h1>You made it!</h1>'
+
+
+@app.route('/logout')
+def logout():
+    '''Logout'''
+    session.pop('username')
+    flash('You are logged out!', 'info')
+    return redirect('/')
