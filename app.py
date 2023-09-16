@@ -60,8 +60,11 @@ def login_user():
 def get_user(username):
     '''Show profile information about a user.'''
     if 'username' in session:
-        user = User.query.get(username)
-        return render_template('user-profile.html', user=user)
+        logged_in_user = User.query.get(username)
+        if logged_in_user.username == session['username']:
+            return render_template('user-profile.html', user=logged_in_user)
+        else:
+            return redirect(f'/users/{session["username"]}')
     else:
         flash('Cannot access resource unless logged in!', 'danger')
         return redirect('/login')
