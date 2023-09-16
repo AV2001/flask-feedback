@@ -36,3 +36,14 @@ class User(db.Model):
     def full_name(self):
         '''Returns the full name.'''
         return f'{self.first_name} {self.last_name}'
+
+
+class Feedback(db.Model):
+    '''Feedback Model'''
+
+    __tablename__ = 'feedbacks'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(100), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    username = db.Column(db.String(20), db.ForeignKey('users.username'))
