@@ -88,3 +88,17 @@ def delete_user(username):
         return redirect('/')
     flash('Please login to delete your account!', 'danger')
     return redirect('/login')
+
+
+@app.route('/users/<username>/feedback/add')
+def show_add_feedback_form(username):
+    '''Show feedback form for the logged in user.'''
+    if 'username' in session:
+        logged_in_user = User.query.get(username)
+        if logged_in_user.username == session['username']:
+            return render_template('add-feedback-form.html')
+        else:
+            return redirect(f'/users/{session["username"]}')
+    else:
+        flash('You must be logged in!', 'danger')
+        return redirect('/')
