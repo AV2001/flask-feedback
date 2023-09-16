@@ -1,5 +1,5 @@
 from flask import Flask, flash, redirect, render_template, session
-from models import db, User
+from models import db, User, Feedback
 from forms import RegisterForm, LoginForm
 
 # Create instance of Flask.
@@ -73,3 +73,18 @@ def logout():
     session.pop('username')
     flash('You are logged out!', 'info')
     return redirect('/')
+
+
+@app.route('/users/<username>/delete', methods=['POST'])
+def delete_user(username):
+    '''Delete a particular user.'''
+    user = User.query.get(username)
+    # Only delete the user if they are logged in
+    if 'username' in session and user.username == session['username']:
+        db.session.delete(user)
+        db.session.commit()
+        session.pop('username')
+        flash('Account deleted successfully!', 'success')
+        return redirect('/')
+    flash('Please login to delete your account!', 'danger')
+    return redirect('/login')
