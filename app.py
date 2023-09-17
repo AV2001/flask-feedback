@@ -113,13 +113,28 @@ def add_feedback(username):
     title = request.form['title']
     content = request.form['content']
     user = User.query.get(username)
-    new_feedback = Feedback(title=title, content=content, username=user.username)
+    new_feedback = Feedback(
+        title=title, content=content, username=user.username)
     if 'username' in session:
         logged_in_user = User.query.get(username)
         if logged_in_user.username == session['username']:
             db.session.add(new_feedback)
             db.session.commit()
             return redirect(f'/users/{username}')
+    else:
+        flash('You must be logged in!', 'danger')
+        return redirect('/')
+
+
+@app.route('/feedback/<int:id>/update')
+def show_update_feedback_form(id):
+    '''Show the update feedback form.'''
+    if 'username' in session:
+        feedback = Feedback.query.get(id)
+        if session['username'] == feedback.username:
+            return render_template('update-feedback-form.html', feedback=feedback)
+        else:
+            return redirect(f'/users/{session["username"]}')
     else:
         flash('You must be logged in!', 'danger')
         return redirect('/')
