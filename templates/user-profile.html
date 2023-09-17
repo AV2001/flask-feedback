@@ -1,26 +1,29 @@
-{% extends 'base.html' %}
-{% block title %}{{user.full_name}}{% endblock %}
-{% block content %}
-<h1 class="display-text">{{user.full_name}}'s Profile</h1>
+{% extends 'base.html' %} {% block title %}{{user.full_name}}{% endblock %} {%
+block content %} {% if user.username == session['username'] %}
+<h1 class="display-text">
+    {{user.full_name}}'s Profile
+    <form
+        style="display: inline"
+        action="/users/{{user.username}}/delete"
+        method="POST"
+    >
+        <button class="btn btn-sm btn-danger">
+            <i class="fas fa-trash"></i>
+        </button>
+    </form>
+</h1>
+{% if user.feedback %} {% for feedback in user.feedback %}
 <div class="card my-4">
     <div class="card-body">
-        <h5 class="card-title text-info">
-            {{user.username}}
-            {% if user.username == session['username'] %}
-            <form
-                style="display: inline"
-                action="/users/{{user.username}}/delete"
-                method="POST"
-            >
-                <button class="btn btn-sm btn-danger">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </form>
-            {% endif %}
-        </h5>
+        <h5 class="card-title text-info">{{feedback.title}}</h5>
         <h6 class="card-subtitle mb-2 text-muted">{{user.email}}</h6>
-        <p class="card-text">{{user.full_name}}</p>
+        <p class="card-text">{{feedback.content}}</p>
     </div>
 </div>
-<a href="/users/{{user.username}}/feedback/add" class="btn btn-info">Add Feedback</a>
-{% endblock %}
+{% endfor %} {% else %}
+<p class="lead">You did not provide any feedback.</p>
+{% endif %}
+<a href="/users/{{user.username}}/feedback/add" class="btn btn-info"
+    >Add Feedback</a
+>
+{% endif %} {% endblock %}
