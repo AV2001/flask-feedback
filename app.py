@@ -138,3 +138,21 @@ def show_update_feedback_form(id):
     else:
         flash('You must be logged in!', 'danger')
         return redirect('/')
+
+
+@app.route('/feedback/<int:id>/update', methods=['POST'])
+def update_feedback(id):
+    '''Process form to update feedback'''
+    title = request.form['title']
+    content = request.form['content']
+    if 'username' in session:
+        logged_in_user = User.query.get(session['username'])
+        if logged_in_user.username:
+            feedback = Feedback.query.get(id)
+            feedback.title = title
+            feedback.content = content
+            db.session.commit()
+            return redirect(f'/users/{session["username"]}')
+    else:
+        flash('You must be logged in!', 'danger')
+        return redirect('/')
