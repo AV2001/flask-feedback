@@ -1,4 +1,4 @@
-from flask import Flask, flash, redirect, render_template, session
+from flask import Flask, flash, redirect, render_template, request, session
 from models import db, User, Feedback
 from forms import RegisterForm, LoginForm
 
@@ -102,6 +102,24 @@ def show_add_feedback_form(username):
             return render_template('add-feedback-form.html')
         else:
             return redirect(f'/users/{session["username"]}')
+    else:
+        flash('You must be logged in!', 'danger')
+        return redirect('/')
+
+
+@app.route('/users/<username>/feedback/add', methods=['POST'])
+def add_feedback(username):
+    '''Process form to add feedback.'''
+    title = request.form['title']
+    content = request.form['content']
+    user = User.query.get(username)
+    new_feedback = Feedback(title=title, content=content, username=user.username)
+    if 'username' in session:
+        logged_in_user = User.query.get(username)
+        if logged_in_user.username == session['username']:
+            db.session.add(new_feedback)
+            db.session.commit()
+            return redirect(f'/users/{username}')
     else:
         flash('You must be logged in!', 'danger')
         return redirect('/')
