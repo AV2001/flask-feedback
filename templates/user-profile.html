@@ -18,6 +18,9 @@ block content %} {% if user.username == session['username'] %}
         <h5 class="card-title text-info">{{feedback.title}}</h5>
         <h6 class="card-subtitle mb-2 text-muted">{{user.email}}</h6>
         <p class="card-text">{{feedback.content}}</p>
+        <a href="/feedback/{{feedback.id}}/update" class="btn btn-info"
+            >Update</a
+        >
     </div>
 </div>
 {% endfor %} {% else %}
