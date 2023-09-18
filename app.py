@@ -23,37 +23,41 @@ def home_page():
 @app.route('/register', methods=['GET', 'POST'])
 def register_user():
     '''Register'''
-    form = RegisterForm()
-    if form.validate_on_submit():
-        username = form.username.data
-        password = form.password.data
-        email = form.email.data
-        first_name = form.first_name.data
-        last_name = form.last_name.data
-        new_user = User.register(
-            username, password, email, first_name, last_name)
-        db.session.add(new_user)
-        db.session.commit()
-        flash('Account Created Successfully!', 'success')
-        return redirect('/login')
-    return render_template('register.html', form=form)
+    if 'username' not in session:
+        form = RegisterForm()
+        if form.validate_on_submit():
+            username = form.username.data
+            password = form.password.data
+            email = form.email.data
+            first_name = form.first_name.data
+            last_name = form.last_name.data
+            new_user = User.register(
+                username, password, email, first_name, last_name)
+            db.session.add(new_user)
+            db.session.commit()
+            flash('Account Created Successfully!', 'success')
+            return redirect('/login')
+        return render_template('register.html', form=form)
+    return redirect(f'/users/{session["username"]}')
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login_user():
     '''Login'''
-    form = LoginForm()
-    if form.validate_on_submit():
-        username = form.username.data
-        password = form.password.data
-        user = User.authenticate(username, password)
-        if user:
-            flash('Login Successful!', 'success')
-            session['username'] = user.username
-            return redirect(f'/users/{user.username}')
-        else:
-            form.username.errors.append('Invalid username/password!')
-    return render_template('login.html', form=form)
+    if 'username' not in session:
+        form = LoginForm()
+        if form.validate_on_submit():
+            username = form.username.data
+            password = form.password.data
+            user = User.authenticate(username, password)
+            if user:
+                flash('Login Successful!', 'success')
+                session['username'] = user.username
+                return redirect(f'/users/{user.username}')
+            else:
+                form.username.errors.append('Invalid username/password!')
+        return render_template('login.html', form=form)
+    return redirect(f'/users/{session["username"]}')
 
 
 @app.route('/users/<username>')
