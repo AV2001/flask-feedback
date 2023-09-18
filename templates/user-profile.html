@@ -7,9 +7,7 @@ block content %} {% if user.username == session['username'] %}
         action="/users/{{user.username}}/delete"
         method="POST"
     >
-        <button class="btn btn-sm btn-danger">
-            <i class="fas fa-trash"></i>
-        </button>
+        <button class="btn btn-sm btn-danger">Delete User</button>
     </form>
 </h1>
 {% if user.feedback %} {% for feedback in user.feedback %}
@@ -18,9 +16,14 @@ block content %} {% if user.username == session['username'] %}
         <h5 class="card-title text-info">{{feedback.title}}</h5>
         <h6 class="card-subtitle mb-2 text-muted">{{user.email}}</h6>
         <p class="card-text">{{feedback.content}}</p>
-        <a href="/feedback/{{feedback.id}}/update" class="btn btn-info"
-            >Update</a
-        >
+        <div style="display: flex; gap: 0.4em">
+            <a href="/feedback/{{feedback.id}}/update" class="btn btn-info"
+                >Update</a
+            >
+            <form action="/feedback/{{feedback.id}}/delete" method="POST">
+                <button class="btn btn-danger">Delete</button>
+            </form>
+        </div>
     </div>
 </div>
 {% endfor %} {% else %}
