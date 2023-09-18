@@ -156,3 +156,17 @@ def update_feedback(id):
     else:
         flash('You must be logged in!', 'danger')
         return redirect('/')
+
+
+@app.route('/feedback/<int:id>/delete', methods=['POST'])
+def delete_feedback(id):
+    '''Delete feedback.'''
+    if 'username' in session:
+        feedback = Feedback.query.get(id)
+        if session['username'] == feedback.username:
+            db.session.delete(feedback)
+            db.session.commit()
+        return redirect(f'/users/{session["username"]}')
+    else:
+        flash('You must be logged in!', 'danger')
+        return redirect('/')
